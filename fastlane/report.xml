@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000378">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="1: xcodebuild -project ../Proyecto1.xcodeproj -scheme Proyecto1 -configuration Debug -destination generic/platform\=iOS\ Simulator CODE_SIGNING_ALLOWED\=NO SWIFT_VERSION\=5.0 clean build" time="2.861235">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>
