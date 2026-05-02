@@ -14,12 +14,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "4.0.2"
-          bundler-cache: true
+      - name: Resolve Swift Package dependencies
+        run: |
+          xcodebuild \
+            -project Proyecto1.xcodeproj \
+            -scheme Proyecto1 \
+            -resolvePackageDependencies
 
       - name: Build project
         run: |
-          bundle exec fastlane ios build
+          xcodebuild \
+            -project Proyecto1.xcodeproj \
+            -scheme Proyecto1 \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            SWIFT_VERSION=5.0 \
+            clean \
+            build
