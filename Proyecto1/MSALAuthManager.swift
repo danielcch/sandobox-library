@@ -68,13 +68,16 @@ final class MSALAuthManager: ObservableObject {
         }
     }
 
-    private func topViewController(
-        from controller: UIViewController? = UIApplication.shared.connectedScenes
+    private func topViewController() -> UIViewController? {
+        let controller = UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
-            .flatMap(\.windows)
-            .first(where: \.isKeyWindow)?
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }?
             .rootViewController
-    ) -> UIViewController? {
+        return topViewController(from: controller)
+    }
+
+    private func topViewController(from controller: UIViewController?) -> UIViewController? {
         if let navigationController = controller as? UINavigationController {
             return topViewController(from: navigationController.visibleViewController)
         }

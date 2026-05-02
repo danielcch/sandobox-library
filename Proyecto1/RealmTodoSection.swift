@@ -64,8 +64,10 @@ struct RealmTodoSection: View {
     }
 
     private func delete(_ item: TodoItem) {
-        if let index = items.firstIndex(of: item) {
-            $items.remove(at: index)
+        if let realm = item.realm {
+            try? realm.write {
+                realm.delete(item)
+            }
         }
     }
 }
