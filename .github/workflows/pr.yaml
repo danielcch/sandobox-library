@@ -21,16 +21,27 @@ jobs:
       - name: Setup mise and Tuist
         uses: jdx/mise-action@v2
 
-      - name: Cache local Tuist directories
-        uses: actions/cache@v4
+      - name: Restore Tuist binary cache
+        id: tuist-cache-restore
+        uses: actions/cache/restore@v4
         with:
           path: |
-            .cache/tuist
+            .cache/tuist/Binaries
+            .cache/tuist/Projects
+            .cache/tuist/Manifests
+          key: tuist-binaries-${{ runner.os }}-xcode26_3-tuist4_111_1-${{ hashFiles('.mise.toml', 'Tuist.swift', 'Project.swift', 'Tuist/Package.swift') }}
+          restore-keys: |
+            tuist-binaries-${{ runner.os }}-xcode26_3-tuist4_111_1-
+
+      - name: Restore Tuist state
+        uses: actions/cache/restore@v4
+        with:
+          path: |
             .config/tuist
             .local/state/tuist
-          key: tuist-${{ runner.os }}-${{ hashFiles('.mise.toml', 'Tuist.swift', 'Project.swift', 'Tuist/Package.swift') }}
+          key: tuist-state-${{ runner.os }}-${{ hashFiles('.mise.toml') }}
           restore-keys: |
-            tuist-${{ runner.os }}-
+            tuist-state-${{ runner.os }}-
 
       - name: Install dependencies
         run: tuist install
@@ -40,11 +51,19 @@ jobs:
 
       - name: Warm Tuist cache
         run: |
-          tuist cache warm --configuration Debug --external-only
+          tuist cache --configuration Debug --external-only
 
       - name: Generate workspace
         run: |
           tuist generate --configuration Debug --cache-profile development
+
+      - name: Inspect Tuist binary cache
+        if: always()
+        run: |
+          echo "Cache contents:"
+          find .cache/tuist -maxdepth 3 -type d | sort || true
+          echo "Binary cache size:"
+          du -sh .cache/tuist/Binaries 2>/dev/null || true
 
       - name: Build project
         run: |
@@ -58,3 +77,13 @@ jobs:
             SWIFT_VERSION=5.0 \
             clean \
             build | xcbeautify --renderer github-actions
+
+      - name: Save Tuist binary cache
+        if: always() && steps.tuist-cache-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            .cache/tuist/Binaries
+            .cache/tuist/Projects
+            .cache/tuist/Manifests
+          key: ${{ steps.tuist-cache-restore.outputs.cache-primary-key }}
