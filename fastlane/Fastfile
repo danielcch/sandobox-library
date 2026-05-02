@@ -11,15 +11,20 @@ platform :ios do
   desc "Solo compila el proyecto (sin IPA)"
   lane :build do
     sh(
-      "xcodebuild",
-      "-project", PROJECT,
-      "-scheme", SCHEME,
-      "-configuration", CONFIGURATION,
-      "-destination", "generic/platform=iOS Simulator",
-      "CODE_SIGNING_ALLOWED=NO",
-      "SWIFT_VERSION=5.0",
-      "clean",
-      "build"
+      "bash",
+      "-lc",
+      [
+        "set -o pipefail",
+        "xcodebuild",
+        "-project #{PROJECT}",
+        "-scheme #{SCHEME}",
+        "-configuration #{CONFIGURATION}",
+        "-destination 'generic/platform=iOS Simulator'",
+        "CODE_SIGNING_ALLOWED=NO",
+        "SWIFT_VERSION=5.0",
+        "clean",
+        "build | xcbeautify"
+      ].join(" ")
     )
   end
 

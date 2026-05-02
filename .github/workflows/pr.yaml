@@ -23,6 +23,7 @@ jobs:
 
       - name: Build project
         run: |
+          set -o pipefail
           xcodebuild \
             -project Proyecto1.xcodeproj \
             -scheme Proyecto1 \
@@ -31,4 +32,4 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             SWIFT_VERSION=5.0 \
             clean \
-            build
+            build | xcbeautify --renderer github-actions
