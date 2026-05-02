@@ -34,10 +34,12 @@ jobs:
       - name: Install dependencies
         run: tuist install
 
-      - name: Warm cache and generate workspace
+      - name: Print Tuist cache hashes
+        run: tuist cache --configuration Debug --print-hashes
+
+      - name: Generate workspace
         run: |
-          tuist cache --configuration Debug --external-only
-          tuist generate --configuration Debug --cache-profile development
+          tuist generate --configuration Debug --cache-profile none
 
       - name: Build project
         run: |
