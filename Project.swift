@@ -5,8 +5,6 @@ func targetSettings() -> Settings {
         base: [
             "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIcon",
             "ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME": "AccentColor",
-            // Keep module interfaces stable when a target becomes cacheable as a binary later.
-            "BUILD_LIBRARY_FOR_DISTRIBUTION": "YES",
             "CODE_SIGN_STYLE": "Automatic",
             "CURRENT_PROJECT_VERSION": "1",
             "DEVELOPMENT_TEAM": "A6S6G97MVN",
