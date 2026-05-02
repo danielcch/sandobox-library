@@ -36,7 +36,7 @@ jobs:
 
       - name: Warm cache and generate workspace
         run: |
-          tuist cache warm --configuration Debug --external-only
+          tuist cache --configuration Debug --external-only
           tuist generate --configuration Debug --cache-profile development
 
       - name: Build project

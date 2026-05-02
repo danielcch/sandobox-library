@@ -37,7 +37,7 @@ platform :ios do
   desc "Compila el proyecto generado por Tuist usando module cache"
   lane :build_with_cache do
     sh("tuist install")
-    sh("tuist cache warm --configuration #{CONFIGURATION} --external-only")
+    sh("tuist cache --configuration #{CONFIGURATION} --external-only")
     sh("tuist generate --configuration #{CONFIGURATION} --cache-profile development")
 
     sh(
