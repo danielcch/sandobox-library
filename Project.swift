@@ -79,8 +79,10 @@ let project = Project(
             dependencies: [
                 .external(name: "FirebaseCore"),
                 .external(name: "FirebaseFirestore"),
+                .external(name: "Realm"),
                 .external(name: "RealmSwift"),
                 .external(name: "MSAL"),
+                .external(name: "SDWebImage"),
                 .external(name: "SDWebImageSwiftUI"),
             ],
             settings: targetSettings()
