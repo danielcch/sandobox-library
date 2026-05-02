@@ -12,6 +12,7 @@ jobs:
       TUIST_XDG_CACHE_HOME: ${{ github.workspace }}/.cache/tuist
       TUIST_XDG_CONFIG_HOME: ${{ github.workspace }}/.config/tuist
       TUIST_XDG_STATE_HOME: ${{ github.workspace }}/.local/state/tuist
+      TUIST_LEGACY_MODULE_CACHE: "1"
 
     steps:
       - name: Checkout
@@ -35,11 +36,15 @@ jobs:
         run: tuist install
 
       - name: Print Tuist cache hashes
-        run: tuist cache --configuration Debug --print-hashes
+        run: tuist hash cache --configuration Debug
+
+      - name: Warm Tuist cache
+        run: |
+          tuist cache warm --configuration Debug --external-only
 
       - name: Generate workspace
         run: |
-          tuist generate --configuration Debug --cache-profile none
+          tuist generate --configuration Debug --cache-profile development
 
       - name: Build project
         run: |

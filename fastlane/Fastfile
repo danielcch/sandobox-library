@@ -1,5 +1,7 @@
 default_platform(:ios)
 
+ENV["TUIST_LEGACY_MODULE_CACHE"] = "1"
+
 platform :ios do
   SCHEME = "Proyecto1"
   WORKSPACE = "Proyecto1.xcworkspace"
@@ -37,7 +39,8 @@ platform :ios do
   desc "Compila el proyecto generado por Tuist usando module cache"
   lane :build_with_cache do
     sh("tuist install")
-    sh("tuist generate --configuration #{CONFIGURATION} --cache-profile none")
+    sh("tuist cache warm --configuration #{CONFIGURATION} --external-only")
+    sh("tuist generate --configuration #{CONFIGURATION} --cache-profile development")
 
     sh(
       "bash",
