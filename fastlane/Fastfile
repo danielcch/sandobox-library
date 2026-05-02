@@ -1,0 +1,49 @@
+default_platform(:ios)
+
+platform :ios do
+  # Configuración común
+  SCHEME = "Proyecto1"              # Cambia por tu esquema
+  WORKSPACE = "Proyecto1.xcworkspace" # O usa PROJECT = "Proyecto1.xcodeproj"
+  CONFIGURATION = "Release"         # O "Debug" si lo prefieres
+  OUTPUT_DIR = "build"              # Carpeta de artefactos
+  EXPORT_METHOD = "ad-hoc"          # "app-store", "ad-hoc", "development", "enterprise"
+
+  desc "Solo compila el proyecto (sin IPA)"
+  lane :build do
+    # Limpia y compila
+    gym(
+      workspace: WORKSPACE,
+      scheme: SCHEME,
+      configuration: CONFIGURATION,
+      clean: true,
+      skip_package_ipa: true,         # <- clave: no generar IPA
+      skip_archive: false,            # sí archiva .xcarchive (útil para depuración)
+      output_directory: OUTPUT_DIR,
+      silent: false
+    )
+  end
+
+  desc "Genera IPA firmado y listo para distribuir"
+  lane :ipa do
+    # Opcional: incrementar build number automáticamente
+    # increment_build_number(xcodeproj: "Proyecto1.xcodeproj")
+
+    # Genera el .ipa (y .xcarchive)
+    gym(
+      workspace: WORKSPACE,
+      scheme: SCHEME,
+      configuration: CONFIGURATION,
+      clean: true,
+      export_method: EXPORT_METHOD,   # Ajusta según tu necesidad
+      output_directory: OUTPUT_DIR,
+      output_name: "Proyecto1.ipa",
+      include_bitcode: false,         # App Store ya no requiere bitcode
+      include_symbols: true,
+      silent: false
+    )
+
+    # Si quieres, sube a TestFlight automáticamente:
+    # pilot(upload: true, ipa: File.join(OUTPUT_DIR, "Proyecto1.ipa"))
+  end
+end
+
